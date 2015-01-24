@@ -9,12 +9,13 @@ from mathtools.plotter import rotFromRPY
 import math
 import numpy as np
 
-DEBUG=1
+DEBUG=0
 
 def htoq(k,h1,h2,h3):
 
         if k>3 or k<0:
-                print "[WARNING] k not in {0,1,2,3}"
+                if DEBUG:
+                        print "[WARNING] k not in {0,1,2,3}",k
                 return [None,None]
 
         dk=ROBOT_DIST_FOOT_SOLE
@@ -26,9 +27,13 @@ def htoq(k,h1,h2,h3):
 
         l1 = h1 - dk
         if l1 < 0:
+                if DEBUG:
+                        print "h1>dk",h1,dk
                 return [None,None]
         l2 = h3 - d2 - h1
         if l2 < 0:
+                if DEBUG:
+                        print "h3 < d2-h1",h3,d2,h1
                 return [None,None]
 
         d5 = sqrt(h2*h2+l2*l2)
@@ -37,14 +42,21 @@ def htoq(k,h1,h2,h3):
         sqrtA = 4*l1*l1*d0*d0-pow(l1*l1-d1*d1+d0*d0,2)
         sqrtB = 4*d5*d5*d3*d3-pow(d5*d5-d4*d4+d3*d3,2)
         if sqrtA < 0:
+                if DEBUG:
+                        print "sqrtA<0"
                 return [None,None]
         if sqrtB < 0:
+                if DEBUG:
+                        print "sqrtB<0",d5,d4,d3,l1,l2,h2
                 return [None,None]
+
         a=(1/(2*l1))*sqrt(sqrtA) 
         b=(1/(2*d5))*sqrt(sqrtB) 
 
         l0 = sqrt(d0*d0 - a*a)
         if math.isnan(l0):
+                if DEBUG:
+                        print "d0 < a",d0,a
                 return [None,None]
 
         p1 = np.array((0,0,dk))
@@ -91,8 +103,11 @@ def htoq(k,h1,h2,h3):
                 ((v1+v2)[2] > v1[2]),
                 ((v2+v3)[2] > v2[2]),
                 ((v3+v4)[2] > v3[2])]
+
         if np.sum(inj_assumptions) < len(inj_assumptions):
                 ## trajectory not injective
+                if DEBUG:
+                        print "path not injective!",vk[2],v0[2],v1[2],v2[2],v3[2],v4[2]
                 return [None,None]
 
         xx = np.array((1,0,0))
@@ -157,7 +172,8 @@ def htoq(k,h1,h2,h3):
 
                         ## due to the nature of circle intersections, v4 has to
                         ## lie on the right side of v3
-                        theta[4] = -g4rel
+                        #theta[4] = -g4rel
+                        theta[4] = 0.0
                         if v4n[0] > 0:
                                 q[4] = g4
                         else:
@@ -184,7 +200,8 @@ def htoq(k,h1,h2,h3):
                                 theta[3] = -g3
 
                         ## v4 lies on the left side of v3
-                        theta[4] = g4rel
+                        #theta[4] = g4rel
+                        theta[4] = 0.0
                         if v4pn[0] > 0:
                                 q[4] = g4
                         else:

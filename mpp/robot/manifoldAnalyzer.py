@@ -58,6 +58,7 @@ if len(X)>0:
                                 xkk = X[k+1,j*8+i]
                                 if abs(xk-xkk) > 0.01:
                                         axray[i][j].plot([k,k],[xk-0.15,xk+0.15],'-ok',linewidth=1)
+                                        print "outliner distance:",abs(xk-xkk)
 
 
 
