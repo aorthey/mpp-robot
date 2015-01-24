@@ -52,9 +52,9 @@ h3high = 1.7
 #h2step = 0.005
 #h3step = 0.005
 
-h1step = 0.05
-h2step = 0.05
-h3step = 0.05
+h1step = 0.002
+h2step = 0.002
+h3step = 0.01
 VIDEO_DEBUG = 0
 
 h3=h3low
