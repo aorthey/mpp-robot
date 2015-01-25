@@ -9,12 +9,10 @@ from mathtools.plotter import rotFromRPY
 import math
 import numpy as np
 
-DEBUG=0
-
 def htoq(k,h1,h2,h3):
 
         if k>3 or k<0:
-                if DEBUG:
+                if DEBUG_HTOQ:
                         print "[WARNING] k not in {0,1,2,3}",k
                 return [None,None]
 
@@ -27,12 +25,12 @@ def htoq(k,h1,h2,h3):
 
         l1 = h1 - dk
         if l1 < 0:
-                if DEBUG:
+                if DEBUG_HTOQ:
                         print "h1>dk",h1,dk
                 return [None,None]
         l2 = h3 - d2 - h1
         if l2 < 0:
-                if DEBUG:
+                if DEBUG_HTOQ:
                         print "h3 < d2-h1",h3,d2,h1
                 return [None,None]
 
@@ -42,11 +40,11 @@ def htoq(k,h1,h2,h3):
         sqrtA = 4*l1*l1*d0*d0-pow(l1*l1-d1*d1+d0*d0,2)
         sqrtB = 4*d5*d5*d3*d3-pow(d5*d5-d4*d4+d3*d3,2)
         if sqrtA < 0:
-                if DEBUG:
+                if DEBUG_HTOQ:
                         print "sqrtA<0"
                 return [None,None]
         if sqrtB < 0:
-                if DEBUG:
+                if DEBUG_HTOQ:
                         print "sqrtB<0",d5,d4,d3,l1,l2,h2
                 return [None,None]
 
@@ -55,7 +53,7 @@ def htoq(k,h1,h2,h3):
 
         l0 = sqrt(d0*d0 - a*a)
         if math.isnan(l0):
-                if DEBUG:
+                if DEBUG_HTOQ:
                         print "d0 < a",d0,a
                 return [None,None]
 
@@ -98,15 +96,15 @@ def htoq(k,h1,h2,h3):
 
         ###check assumption on injectivity
         inj_assumptions = \
-                [((v0+vk)[2] > vk[2]),
-                ((v0+v1)[2] > v0[2]),
-                ((v1+v2)[2] > v1[2]),
-                ((v2+v3)[2] > v2[2]),
-                ((v3+v4)[2] > v3[2])]
+                [((v0+vk)[2]>= vk[2]),
+                ((v0+v1)[2] >= v0[2]),
+                ((v1+v2)[2] >= v1[2]),
+                ((v2+v3)[2] >= v2[2]),
+                ((v3+v4)[2] >= v3[2])]
 
         if np.sum(inj_assumptions) < len(inj_assumptions):
                 ## trajectory not injective
-                if DEBUG:
+                if DEBUG_HTOQ:
                         print "path not injective!",vk[2],v0[2],v1[2],v2[2],v3[2],v4[2]
                 return [None,None]
 
@@ -126,7 +124,7 @@ def htoq(k,h1,h2,h3):
                 g1rel = acos(np.dot(v0n.T,v1n.T))
                 g2rel = acos(np.dot(v1n.T,v2n.T))
 
-                if DEBUG:
+                if DEBUG_HTOQ:
                         ### check assumption cases
                         vtest = np.dot(RYneg,v0)
                         if np.dot(v1n,vtest) < 0:
@@ -178,7 +176,7 @@ def htoq(k,h1,h2,h3):
                                 q[4] = g4
                         else:
                                 q[4] = -g4
-                        if DEBUG:
+                        if DEBUG_HTOQ:
                                 ### check assumption cases
                                 vtest = np.dot(RYneg,v3n)
                                 if np.dot(v4n,vtest) < 0:
@@ -206,7 +204,7 @@ def htoq(k,h1,h2,h3):
                                 q[4] = g4
                         else:
                                 q[4] = -g4
-                        if DEBUG:
+                        if DEBUG_HTOQ:
                                 ### check assumption cases
                                 vtest = np.dot(RYpos,v3pn)
                                 if np.dot(v4pn,vtest) < 0:
@@ -219,7 +217,7 @@ def htoq(k,h1,h2,h3):
                 g1rel = acos(np.dot(v0pn.T,v1pn.T))
                 g2rel = acos(np.dot(v1pn.T,v2n.T))
 
-                if DEBUG:
+                if DEBUG_HTOQ:
                         vtest = np.dot(RYpos,v0pn)
                         if np.dot(v1pn,vtest) < 0:
                                 print "Assumption that v1p lies on the left side of v0p is violated"
@@ -257,12 +255,13 @@ def htoq(k,h1,h2,h3):
 
                         ## due to the nature of circle intersections, v4 has to
                         ## lie on the right side of v3
-                        theta[4] = g4rel
+                        #theta[4] = g4rel
+                        theta[4] = 0.0
                         if v4n[0] > 0:
                                 q[4] = g4
                         else:
                                 q[4] = -g4
-                        if DEBUG:
+                        if DEBUG_HTOQ:
                                 ### check assumption cases
                                 vtest = np.dot(RYneg,v3n)
                                 if np.dot(v4n,vtest) < 0:
@@ -282,12 +281,13 @@ def htoq(k,h1,h2,h3):
                                 theta[3] = g3
 
                         ## v4 lies on the left side of v3
-                        theta[4] = -g4rel
+                        #theta[4] = -g4rel
+                        theta[4] = 0.0
                         if v4pn[0] > 0:
                                 q[4] = g4
                         else:
                                 q[4] = -g4
-                        if DEBUG:
+                        if DEBUG_HTOQ:
                                 ### check assumption cases
                                 vtest = np.dot(RYpos,v3pn)
                                 if np.dot(v4pn,vtest) < 0:

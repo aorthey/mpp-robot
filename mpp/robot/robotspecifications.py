@@ -1,8 +1,16 @@
 from math import pi,cos,sin
 import numpy as np
+
+############################################################
+## DEBUG
+############################################################
+DEBUG_HTOQ = 0
+DEBUG_QTOX = 0
+DEBUG_HTOX = 0
 ############################################################
 ## ROBOT CONSTANTS
 ############################################################
+
 ROBOT_SPHERE_RADIUS = 0.3 #the max sphere embedded in the irreducible volume
 ROBOT_MAX_SLOPE = 5 # in degrees
 ROBOT_FOOT_RADIUS = 0.15 # in m
@@ -64,8 +72,11 @@ THETA_LIMITS_UPPER = np.array((0.73,2.62,0.73,1.05,0.79))
 THETA_SELFCOLLISION_LOWER = np.array((-1.2,0.0,-1.5,0.0,-0.2))
 THETA_SELFCOLLISION_UPPER = np.array((0.0,2.3,0.15,0.9,0.1))
 
-QLIMIT_HOMOTOPY01_LOWER = np.array((-1.2,0.0,-0.1,-0.8,-0.2))
-QLIMIT_HOMOTOPY01_UPPER = np.array(( 0.0,1.3, 0.1, 0.0, 0.2))
+#QLIMIT_HOMOTOPY01_LOWER = np.array((-1.2,0.0,-0.1,-0.8,-0.2))
+#QLIMIT_HOMOTOPY01_UPPER = np.array(( 0.0,1.3, 0.1, 0.0, 0.2))
+
+QLIMIT_HOMOTOPY01_LOWER = np.array(( 0.0,-1.3,-0.1, 0.0,-0.2))
+QLIMIT_HOMOTOPY01_UPPER = np.array(( 1.2, 0.0, 0.1, 0.8, 0.2))
 
 QLIMIT_HOMOTOPY23_LOWER = -QLIMIT_HOMOTOPY01_UPPER
 QLIMIT_HOMOTOPY23_UPPER = -QLIMIT_HOMOTOPY01_LOWER

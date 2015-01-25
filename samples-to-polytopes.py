@@ -14,13 +14,6 @@ from timeit import default_timer as timer
 from robot.htox import *
 import numpy as np
 import pickle
-import psutil
-
-def memory_usage_psutil():
-    # return the memory usage in MB
-    process = psutil.Process(os.getpid())
-    mem = process.get_memory_info()[0] / float(2 ** 20)
-    return mem
 
 folder = os.environ["MPP_PATH"]+"mpp-robot/output/xspace"
 

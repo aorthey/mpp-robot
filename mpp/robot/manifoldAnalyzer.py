@@ -20,8 +20,8 @@ khomotopy=1
 
 ### optimize over h3, plot
 
-h3 = 1.2
-h1 = 0.4
+h3 = 1.0
+h1 = 0.6
 h2 = 1.0
 start = timer()
 

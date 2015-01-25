@@ -39,12 +39,16 @@ def hspace2xspace(k,h1,h2,h3):
         thetaL = THETA_LIMITS_LOWER
         thetaU = THETA_LIMITS_UPPER
         if not((theta<=thetaU).all() and (theta>=thetaL).all()):
+                if DEBUG_HTOX and theta is not None:
+                        print "theta hardware limits",theta
                 return [None,None,None,None,None]
 
         ## self collision inspection
         thetaL = THETA_SELFCOLLISION_LOWER
         thetaU = THETA_SELFCOLLISION_UPPER
         if not((theta<=thetaU).all() and (theta>=thetaL).all()):
+                if DEBUG_HTOX and theta is not None:
+                        print "theta self collision limits",theta
                 return [None,None,None,None,None]
 
         ###############################################################################
@@ -59,7 +63,7 @@ def hspace2xspace(k,h1,h2,h3):
 
 def xspaceDisplay(xL,xM,xR):
         xspacePlot(xL,xM,xR)
-        plt.pause(0.1)
+        plt.pause(0.0001)
 
 def xspacePlot(xL,xM,xR,show=False):
         fig=figure(1)

@@ -4,7 +4,7 @@ sys.path.append(os.environ["MPP_PATH"]+"mpp-robot/mpp")
 sys.path.append(os.environ["MPP_PATH"]+"mpp-mathtools/mpp")
 from robot.htox import *
 
-khomotopy=0
+khomotopy=3
 h1 = 0.35
 h2 = -0.7
 h3 = 1.12
@@ -15,5 +15,5 @@ while h2 < 0.5:
         if q is not None:
                 [xL,xR,xM]=qtox(q)
                 if xL is not None:
-                        print "SUCCESS:",q,theta
+                        print "SUCCESS:",q,theta,h2
                         xspacePlot(xL,xM,xR,show=True)

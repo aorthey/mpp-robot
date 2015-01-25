@@ -12,8 +12,9 @@ L = 900
 
 folder = os.environ["MPP_PATH"]+"mpp-robot/output"
 #xfolder = folder+"/xspace/h1_0_01_h2_0_001_h3_0_001"
-#datafolder = "/h1_0_01_h2_0_005_h3_0_005"
-datafolder = "/h1_0_01_h2_0_002_h3_0_002"
+#datafolder = "/h3_0_01_h2_0_005_h1_0_005"
+datafolder = "/h3_0_01_h2_0_01_h1_0_01"
+#datafolder = ""
 
 xfolder = folder+"/xspace"+datafolder
 
@@ -56,15 +57,17 @@ while i < Nsamples:
 ### compute PCA on the middle array
 M = int(math.floor(len(HarraySubsets)*0.5))
 print M
-PCaxes = getMainPCAaxes(HarraySubsets[M][0],HarraySubsets[M][1],Npts)
+PCaxes = getMainPCAaxes(HarraySubsets[M][0])
 
+ctrP = 0
 for i in range(0,len(HarraySubsets)):
         Hsame = HarraySubsets[i][0]
         h3 = HarraySubsets[i][1]
-        istr = str(i).zfill(4)
+        istr = str(ctrP).zfill(4)
         fnameFig = outputfolder+"/xspacePCA"+istr+".png"
         print h3,"with",len(Hsame),"samples projected onto PC and plotted to",fnameFig
-        plotDataMainAxes(Hsame,PCaxes,h3,Npts,fnameFig)
+        if plotDataMainAxes(Hsame,fnameFig):
+                ctrP += 1
 
 ffmpegstr = "ffmpeg -y -framerate 10 -start_number 0000 -i "+outputfolder+"/xspacePCA%04d.png -pix_fmt yuv420p "+outputfolder+"/out.mp4"
 vlcstr = "vlc "+outputfolder+"/out.mp4"

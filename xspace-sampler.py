@@ -1,4 +1,5 @@
 from timeit import default_timer as timer
+###############################################################################
 import sys,os
 sys.path.append(os.environ["MPP_PATH"]+"mpp-robot/mpp")
 sys.path.append(os.environ["MPP_PATH"]+"mpp-mathtools/mpp")
@@ -52,9 +53,9 @@ h3high = 1.7
 #h2step = 0.005
 #h3step = 0.005
 
-h1step = 0.002
-h2step = 0.002
-h3step = 0.01
+h1step = 0.02
+h2step = 0.02
+h3step = 0.02
 VIDEO_DEBUG = 0
 
 h3=h3low
@@ -68,6 +69,7 @@ THETAarray=[]
 Qarray=[]
 
 imgCtr=0
+
 while h3 <= h3high:
         h3 = h3+h3step
 
@@ -75,7 +77,7 @@ while h3 <= h3high:
         M = 0
 
         ##iterate over homotopy classes (HC)
-        for k in range(0,4):
+        for k in range(1,2):
 
                 h2 = h2low
 
@@ -93,6 +95,7 @@ while h3 <= h3high:
 
 
                                 if xL is not None:
+
                                         if h1 >= maxH1:
                                                 maxH1 = h1
                                         if h1 <= minH1:
@@ -119,6 +122,21 @@ while h3 <= h3high:
                                         imgCtr=imgCtr+1
                                         if VIDEO_DEBUG:
                                                 xspaceToImage(xL,xM,xR,imgCtr)
+
+                                        ### add mirror k=3
+                                        qmirror = -q
+                                        [xLmirror,xMmirror,xRmirror] = qtox(qmirror)
+                                        if q is None:
+                                                print "mirror error"
+                                                sys.exit(0)
+                                        thetamirror = theta
+
+                                        XLarray.append(xLmirror)
+                                        XRarray.append(xRmirror)
+                                        XMarray.append(xMmirror)
+                                        THETAarray.append(thetamirror)
+                                        Qarray.append(qmirror)
+                                        Harray.append([3,h1,h2,h3])
                                 #### display x
 
         #print "for h1 in",hmin,hmax
@@ -131,7 +149,24 @@ while h3 <= h3high:
 
 NfeasibleCtrReduced = len(XLarray)
 
-output_folder = os.environ["MPP_PATH"]+"mpp-robot/output/xspace"
+###############################################################################
+#### create folder name from h1,h2,h3 step sizes:
+###############################################################################
+hfolder  = "/h3_"
+hfolder += str(int(h3step))
+hfolder += "_"
+hfolder += str(h3step-int(h3step))[2:]
+hfolder += "_h2_"
+hfolder += str(int(h2step))
+hfolder += "_"
+hfolder += str(h2step-int(h2step))[2:]
+hfolder += "_h1_"
+hfolder += str(int(h1step))
+hfolder += "_"
+hfolder += str(h1step-int(h1step))[2:]
+###############################################################################
+
+output_folder = os.environ["MPP_PATH"]+"mpp-robot/output/xspace"+hfolder
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
