@@ -58,9 +58,9 @@ for i in range(0,len(XLarray)):
 print "homotopy class counter:",kctr
 ### compute PCA on the middle array
 fnameFig = outputfolder+"/completePCA.png"
-print len(XLarray),"samples projected onto PC and plotted to",fnameFig
-[X1,X2,X3] = projectDataOnto3MainAxes(XLarray)
-X = np.array([X1,X2,X3])
+#print len(XLarray),"samples projected onto PC and plotted to",fnameFig
+#[X1,X2,X3] = projectDataOnto3MainAxes(XLarray)
+#X = np.array([X1,X2,X3])
 
 XLarray = np.array(XLarray)
 XLarray = XLarray.reshape(-1, XSPACE_DIMENSION)
@@ -77,8 +77,8 @@ fig.clf()
 ax = fig.gca(projection='3d')
 colors = "bgrcmykw"
 
-k_kmeans = 50
-K=kmeans2(X.T,k_kmeans)
+k_kmeans = 10
+K=kmeans2(XLarray.T,k_kmeans)
 labels = K[1]
 Aarray = []
 ARKarray = []

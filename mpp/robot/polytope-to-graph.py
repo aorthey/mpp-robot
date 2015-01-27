@@ -44,4 +44,5 @@ for i in range(0,N):
                         G_R.add_edge(i,j)
 
 pickle.dump( G_R, open( robot_folder+"/graph_robot.dat", "wb" ) )
-print "wrote connectivity graph to",robot_folder
+pickle.dump( D, open( robot_folder+"/distance_matrix.dat", "wb" ) )
+print "wrote connectivity graph and distance matrix to",robot_folder

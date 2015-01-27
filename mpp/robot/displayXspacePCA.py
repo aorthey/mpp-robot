@@ -62,7 +62,7 @@ def plotDataMainAxes(Xarray,PCaxes,h3,Npts,fname):
 
 def plotDataMainAxes(Xarray,fname, height=None):
         if not len(Xarray)>0:
-                return False
+                return [None,None,None]
         Npts = len(Xarray[0])
         if len(Xarray)>Npts:
                 PCaxes2 = getMainPCAaxes(Xarray)
@@ -105,10 +105,10 @@ def plotDataMainAxes(Xarray,fname, height=None):
                 if height is not None:
                         ax.text(-7,-6,3, "height="+str(np.around(float(height),3)), None)
                 ax.text(-7,-8,3, "variability="+str(np.around(variability,2)), None)
-                savefig( fname, dpi=gcf().dpi)
-                return True
+                #savefig( fname, dpi=gcf().dpi)
+                return [X,Y,Z]
         else:
-                return False
+                return [None,None,None]
 
 
 def plotDataMainAxesSurface(Xarray,fname, height=None):

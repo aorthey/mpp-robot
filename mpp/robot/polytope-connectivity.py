@@ -23,8 +23,17 @@ Aname =   robot_folder+"/A.dat"
 ARKname = robot_folder+"/Ark.dat"
 bname =   robot_folder+"/b.dat"
 G_R = robot_folder+"/graph_robot.dat"
+D = robot_folder+"/distance_matrix.dat"
 
 G_R = pickle.load( open( G_R, "rb" ) )
+D = pickle.load( open( D, "rb" ) )
+
+G_R = nx.Graph()
+N = len(D)
+for i in range(0,N):
+        for j in range(i+1,N):
+                if D[i,j]<=0.02:
+                        G_R.add_edge(i,j)
 
 #plot=Plotter()
 #plot.graphLayout(G_R)

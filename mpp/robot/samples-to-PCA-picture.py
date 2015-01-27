@@ -38,6 +38,7 @@ kctr = [0,0,0,0]
 XLarray = pickle.load( open( XLname, "rb" ) )
 XLarrayK1 = []
 XLarrayK3 = []
+XLarrayH = []
 for i in range(0,len(XLarray)):
         [k,h1,h2,h3] = Harray[i]
         kctr[k]+=1
@@ -46,10 +47,31 @@ for i in range(0,len(XLarray)):
         if k==3:
                 XLarrayK3.append(XLarray[i])
 
+H=[]
+
+for i in range(0,len(XLarray)):
+        [k,h1,h2,h3] = Harray[i]
+        H.append(h3)
+hk = 3
+Harray=np.array(Harray)
+H=np.unique(H)
+
 print "homotopy class counter:",kctr
 ### compute PCA on the middle array
 fnameFig = outputfolder+"/completePCA.png"
-print len(XLarray),"samples projected onto PC and plotted to",fnameFig
 
-if plotDataMainAxes(XLarray,fnameFig):
-        plt.show()
+[X,Y,Z]=plotDataMainAxes(XLarray,fnameFig)
+
+
+if X is not None:
+        print len(XLarray),"samples projected onto PC and plotted to",fnameFig
+        fig=figure(1)
+        ax = fig.gca(projection='3d')
+        i = int(len(H)*0.5)
+        for i in range(0,len(H)):
+                Xh = X[Harray[:,hk]==H[i]]
+                Yh = Y[Harray[:,hk]==H[i]]
+                Zh = Z[Harray[:,hk]==H[i]]
+                print len(Xh)
+                ax.scatter(Xh,Yh,Zh,marker='*',c='b',s=200)
+                plt.pause(0.01)
