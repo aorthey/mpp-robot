@@ -17,9 +17,9 @@ from mathtools.linalg import *
 L = 900
 
 folder = os.environ["MPP_PATH"]+"mpp-robot/output"
-#datafolder = "/h3_0_01_h2_0_01_h1_0_01"
+datafolder = "/h3_0_01_h2_0_01_h1_0_01"
 #datafolder = "/h3_0_02_h2_0_02_h1_0_02"
-datafolder = "/h3_0_01_h2_0_005_h1_0_005"
+#datafolder = "/h3_0_01_h2_0_005_h1_0_005"
 #datafolder = "/h3_0_01_h2_0_002_h1_0_002"
 #datafolder = ""
 
@@ -100,7 +100,6 @@ for i in range(0,k_kmeans):
                         A[p+XSPACE_DIMENSION,p] = -1.0
                         b[p] = U
                         b[p+XSPACE_DIMENSION] = -L
-
 
                 XRk = XRarray[labels==i,:]
                 ##find flat conversion matrix, A*x = xr

@@ -99,7 +99,6 @@ def plotDataMainAxes(Xarray,fname, height=None):
                 #ax.set_zlim3d(-6, 6)
 
                 variability = np.sum(S[0:3])/float(np.sum(S[0:]))
-                print np.around(S,2)
                 print "data variability on 3 main axes:",variability
 
                 if height is not None:

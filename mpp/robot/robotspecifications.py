@@ -7,10 +7,21 @@ import numpy as np
 DEBUG_HTOQ = 0
 DEBUG_QTOX = 0
 DEBUG_HTOX = 0
+DEBUG_CLUSTERH3_PLOT = 1
+K_HOMOTOPY_CLASS=1
+
+############################################################
+## COLORS
+############################################################
+COLOR_SWEPTVOLUME_LEFT = (0.5,0,0.5,1)
+COLOR_SWEPTVOLUME_RIGHT = (0.5,0,0,1)
+COLOR_SCENE = (0.6,0.6,0.6,0.2)
+COLOR_CROSS_SECTION = (0.6,0.2,0.2,0.3)
+COLOR_START_POINT = (0.2,0.2,0.2,1)
+
 ############################################################
 ## ROBOT CONSTANTS
 ############################################################
-
 ROBOT_SPHERE_RADIUS = 0.3 #the max sphere embedded in the irreducible volume
 ROBOT_MAX_SLOPE = 5 # in degrees
 ROBOT_FOOT_RADIUS = 0.15 # in m

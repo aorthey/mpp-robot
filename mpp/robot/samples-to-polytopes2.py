@@ -43,13 +43,19 @@ XLarray = pickle.load( open( XLname, "rb" ) )
 XLarrayK = []
 XLarrayH = []
 
+###############################################################################
+### load all samples, which should be investigated (k=1 homotopy class)
+###############################################################################
 for i in range(0,len(XLarray)):
         [k,h1,h2,h3] = Harray[i]
         kctr[k]+=1
-        if k==1:
+        if k==3:
                 XLarrayK.append(XLarray[i])
                 XLarrayH.append(Harray[i])
 
+###############################################################################
+### get unique H1,H2,H3 values in the samples
+###############################################################################
 H1=[]
 H2=[]
 H3=[]
@@ -60,27 +66,70 @@ for i in range(0,len(XLarrayK)):
         H3.append(h3)
 
 XLarrayH=np.array(XLarrayH)
+
 H1=np.unique(H1)
 H2=np.unique(H2)
 H3=np.unique(H3)
 
 print "dimensions=",len(H2),len(H3)
-plot = Plotter()
+#plot = Plotter()
 #[X,Y,Z] = projectDataOnto3MainAxes(XLarrayK)
 print "samples=",len(XLarrayK)
-[X,Y,Z] = plotDataMainAxes(XLarrayK,[])
+#[X,Y,Z] = plotDataMainAxes(XLarrayK,[])
+
+
+XLarrayK = np.array(XLarrayK)
+XLarrayK = XLarrayK.reshape(-1, XSPACE_DIMENSION)
 
 ###############################################################################
-### obtain h3 clusters
+### kpca
 ###############################################################################
-cvxP = []
+print "kpca"
+print XLarrayK.shape
+
+from sklearn.decomposition import PCA, KernelPCA
+kpca = KernelPCA(kernel='poly', degree=20)
+X_kpca = kpca.fit_transform(XLarrayK)
+print X_kpca.shape
+print "done"
+
+if DEBUG_CLUSTERH3_PLOT:
+        S = kpca.lambdas_
+        v = np.sum(S[0:3])/np.sum(S)
+        print "[KPCA] variability 3 main axes:",v
+        fig=figure(1)
+        ax = fig.gca(projection='3d')
+        XX = X_kpca[:,1]
+        YY = X_kpca[:,2]
+        ZZ = X_kpca[:,3]
+        ax.scatter(XX,YY,ZZ,marker='o',c='r',s=5)
+        #ax.view_init(13,63)
+        ax.view_init(2,-58)
+        plt.show()
+        sys.exit(0)
+        for j in range(0,len(H3)):
+                Hvalid=np.array(XLarrayH[:,3]==H3[j])
+                Xh = XX[Hvalid]
+                Yh = YY[Hvalid]
+                Zh = ZZ[Hvalid]
+                ax.scatter(Xh,Yh,Zh, marker='*',c='b',s=200)
+                plt.pause(0.01)
+
+plt.show()
+sys.exit(0)
+###############################################################################
+### obtain h3 clusters by investigating the unique H3 value samples
+###############################################################################
+
+## cvxP will contain the convex hull of clusters, i.e. samples with the same h3
+## value
+hullClustersH3 = []
 for j in range(0,len(H3)):
         Hvalid=np.array(XLarrayH[:,3]==H3[j])
         Xh2 = X[Hvalid]
         Yh2 = Y[Hvalid]
         Zh2 = Z[Hvalid]
         XX = np.array([Xh2,Yh2,Zh2])
-        [xp,yp,zp,S]=getMainPCAaxes(XX)
         hull = ConvexHull(XX.T)
         E=hull.equations[0::2]
         Ah = np.array(E[0:,0:3])
@@ -88,15 +137,19 @@ for j in range(0,len(H3)):
         for k in range(0,len(Ah)):
                 bh[k] = -E[k,3]
         P = Polytope(Ah,bh)
-        cvxP.append(P)
+        hullClustersH3.append(P)
 
-D = np.zeros((len(cvxP)-1,1))
+D = np.zeros((len(hullClustersH3)-1,1))
+
+###############################################################################
+### compute distance between clusters, and merge nearby clusters together
+###############################################################################
 
 h3clusters = []
 h3clusters_tmp = [0]
-for i in range(0,len(cvxP)-1):
-        cp = cvxP[i]
-        cpp = cvxP[i+1]
+for i in range(0,len(hullClustersH3)-1):
+        cp = hullClustersH3[i]
+        cpp = hullClustersH3[i+1]
         d = distancePolytopePolytope(cp,cpp)
         if d<0.05:
                 h3clusters_tmp.append(i+1)
@@ -105,16 +158,18 @@ for i in range(0,len(cvxP)-1):
                 h3clusters_tmp = []
                 h3clusters_tmp.append(i+1)
         D[i]=np.around(d,3)
-        print np.around(d,2)
 
 if len(h3clusters_tmp)>0:
         h3clusters.append(h3clusters_tmp)
 
-print "h3 clusters=",len(h3clusters),h3clusters
-ctr=0
+###############################################################################
+### merged h3 clusters split, according to their h2 values
+###############################################################################
 
 clusterSamples = []
 clusterSamplesH2 = []
+ctr=0
+print "-----------------------------------------------------------------------"
 for i in range(0,len(h3clusters)):
         h3i = h3clusters[i]
 
@@ -133,10 +188,43 @@ for i in range(0,len(h3clusters)):
         clusterSamplesH2.append(curH2)
         clusterSamples.append(curX)
 
-        print "samples:",curX.shape[1]
+        print "[H3] cluster",i,":",h3i,"samples:",curX.shape[1]
+
         ctr+=curX.shape[1]
 
+print "[H3] -------- total samples:",ctr
+print "-----------------------------------------------------------------------"
 assert ctr == len(XLarrayK)
+
+###############################################################################
+### visualizing [H3] clusters
+###############################################################################
+if DEBUG_CLUSTERH3_PLOT:
+        fig=figure(1)
+        ax = fig.gca(projection='3d')
+        for i in range(0,len(h3clusters)):
+                h3i = h3clusters[i]
+
+                ### put together all h3 clusters in interval h3i
+                curX = np.zeros([3,0])
+                curH2 = np.zeros([1,0])
+
+
+                Hvalid = (XLarrayH[:,3]==H3[h3i[0]])
+                for j in range(1,len(h3i)):
+                        Hvalid |= (XLarrayH[:,3]==H3[h3i[j]])
+
+                XX = X[Hvalid]
+                YY = Y[Hvalid]
+                ZZ = Z[Hvalid]
+
+                ax.scatter(XX,YY,ZZ, marker='*',c='b',s=200)
+                #ax.view_init(18,23)
+                ax.view_init(65,130)
+                plt.pause(0.01)
+
+
+sys.exit(0)
 
 ###############################################################################
 ### obtain h2 clusters inside the h3 clusters

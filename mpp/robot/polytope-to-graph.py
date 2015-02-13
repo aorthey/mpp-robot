@@ -16,7 +16,6 @@ from mathtools.util import *
 from mathtools.linalg import *
 from mathtools.plotter import *
 
-
 robot_folder = os.environ["MPP_PATH"]+"mpp-robot/output/polytopes"
 
 Aname =   robot_folder+"/A.dat"
