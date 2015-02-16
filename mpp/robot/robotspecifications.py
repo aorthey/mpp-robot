@@ -18,7 +18,24 @@ COLOR_SWEPTVOLUME_RIGHT = (0.5,0,0,1)
 COLOR_SCENE = (0.6,0.6,0.6,0.2)
 COLOR_CROSS_SECTION = (0.6,0.2,0.2,0.3)
 COLOR_START_POINT = (0.2,0.2,0.2,1)
+COLOR_WALKABLE_SURFACE = (0.6,0.1,0.1,1)
 
+############################################################
+## PATH CONSTANTS
+############################################################
+
+MINIMUM_SAMPLES_PER_WALKABLE_SURFACE = 15
+EPSILON_FUNCTIONAL_SPACE = 0.03
+K_POLYNOMIAL_BASIS_FUNCTIONS = 2000
+M_TRAJECTORY_POINTS = 1500
+
+## min stepping distance 20cm
+MIN_DISTANCE_POINTS_TO_BOUNDARY = 0.02
+MIN_DISTANCE_WALKABLE_SURFACES = 0.2
+PATH_DIST_WAYPOINTS_MAX = MIN_DISTANCE_WALKABLE_SURFACES
+
+PATH_RADIUS_START_REGION = 0.05
+PATH_RADIUS_GOAL_REGION = 0.05
 ############################################################
 ## ROBOT CONSTANTS
 ############################################################
@@ -91,10 +108,3 @@ QLIMIT_HOMOTOPY01_UPPER = np.array(( 1.2, 0.0, 0.1, 0.8, 0.2))
 
 QLIMIT_HOMOTOPY23_LOWER = -QLIMIT_HOMOTOPY01_UPPER
 QLIMIT_HOMOTOPY23_UPPER = -QLIMIT_HOMOTOPY01_LOWER
-############################################################
-## PATH CONSTANTS
-############################################################
-
-PATH_DIST_WAYPOINTS_MAX = 0.2
-PATH_RADIUS_START_REGION = 0.1
-PATH_RADIUS_GOAL_REGION = 0.1
