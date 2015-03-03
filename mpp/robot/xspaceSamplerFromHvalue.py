@@ -168,8 +168,7 @@ def xspaceSamplerFromHvalue(h1step,h2step,h3step):
         print "======================================================================="
         print "Samples:"
         print "  N   = "+str(NCtr)
-        print "  N_f = "+str(NfeasibleCtr)
-        print "  N_f_r = "+str(NfeasibleCtrReduced)
+        print "  N_f = "+str(NfeasibleCtrReduced)
         print "======================================================================="
         print "interval of H values"
         print "h1=\["+str(minH1)+","+str(maxH1)+"\]"
